@@ -1,6 +1,6 @@
 import User from 'App/Models/User';
 import { schema, rules } from '@ioc:Adonis/Core/Validator';
-import Database from '@ioc:Adonis/Lucid/Database'
+// import Database from '@ioc:Adonis/Lucid/Database'
 export default class UserController {
     public async store({ request, response }) {
         const newUserSchema = schema.create({
@@ -22,7 +22,6 @@ export default class UserController {
         }
     }
     public async login({ auth, request, response }) {
-        console.log(request.body().mobile)
         // const data1 = await Database.from('api_tokens').where({'expires_at' < raw(`Date.now()`)});
         // console.log(data1)
         try {
@@ -47,9 +46,7 @@ export default class UserController {
     public async logout({ auth, request, response }) {
         try {
             await auth.use('api').revoke();
-            return {
-                revoked: true
-            }
+            response.send({ message: 'Logged out successful', status: 'success', statusCode: 200 })
         } catch (error) {
             response.badRequest(error.messages)
         }
