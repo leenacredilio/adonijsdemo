@@ -18,14 +18,30 @@
 |
 */
 
-import Route from '@ioc:Adonis/Core/Route'
-
-Route.get('register', async (ctx) => {
-  const { default: UserController } = await import(
-    '../app/Controllers/Http/UsersController'
-  )
-  return new UserController().index(ctx)
-})
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+import Route from '@ioc:Adonis/Core/Route';
+Route.post('register', 'UsersController.store');
+Route.post('login', 'UsersController.login');
+Route.post('logout', 'UsersController.logout');
+// Route.group(() => {
+//   Route.post("register", "UsersController.register");
+//   // Route.post("login", "AuthController.login");
+//   // Route.group(() => {
+//   //   Route.resource("posts", "PostsController").apiOnly();
+//   //   Route.resource("forums", "ForumsController").apiOnly();
+//   //   Route.get("users/forums", "UsersController.forumsByUser");
+//   //   Route.get("users/posts", "UsersController.postsByUser");
+//   // }).middleware("auth:api");
+// }).prefix("api");
+// Route.post('/register', 'UsersController.register').as('auth.register')
+// Route.post('/register', 'UsersController.register')
+// Route.resource('auth', 'UsersController').apiOnly()
+// Route.post('/register', async (ctx) => {
+//   console.log('ddddd')
+//   const { default: UserController } = await import(
+//     '../app/Controllers/Http/UsersController'
+//   )
+//   return new UserController().register(ctx)
+// })
+// Route.get('/', async () => {
+//   return { hello: 'world' }
+// })
