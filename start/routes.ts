@@ -23,30 +23,8 @@ Route.post('register', 'UsersController.store');
 Route.post('login', 'UsersController.login');
 Route.post('logout', 'UsersController.logout').middleware('auth');
 Route.group(() => {
-    Route.post('profile', 'ProfilesController.addProfile').middleware('auth');
-    Route.get('profile', 'ProfilesController.getProfile').middleware('auth');
-    Route.put('profile', 'ProfilesController.updateProfile').middleware('auth');
-    Route.delete('profile', 'ProfilesController.deleteProfile').middleware('auth');
-}).prefix('user')
-// Route.group(() => {
-//   Route.post("register", "UsersController.register");
-//   // Route.post("login", "AuthController.login");
-//   // Route.group(() => {
-//   //   Route.resource("posts", "PostsController").apiOnly();
-//   //   Route.resource("forums", "ForumsController").apiOnly();
-//   //   Route.get("users/forums", "UsersController.forumsByUser");
-//   //   Route.get("users/posts", "UsersController.postsByUser");
-//   // }).middleware("auth:api");
-// }).prefix("api");
-// Route.post('/register', 'UsersController.register').as('auth.register')
-// Route.post('/register', 'UsersController.register')
-// Route.resource('auth', 'UsersController').apiOnly()
-// Route.post('/register', async (ctx) => {
-//   const { default: UserController } = await import(
-//     '../app/Controllers/Http/UsersController'
-//   )
-//   return new UserController().register(ctx)
-// })
-// Route.get('/', async () => {
-//   return { hello: 'world' }
-// })
+    Route.post('profile', 'ProfilesController.addProfile');
+    Route.get('profile', 'ProfilesController.getProfile');
+    Route.put('profile', 'ProfilesController.updateProfile');
+    Route.delete('profile', 'ProfilesController.deleteProfile');
+}).prefix('user').middleware('auth');
