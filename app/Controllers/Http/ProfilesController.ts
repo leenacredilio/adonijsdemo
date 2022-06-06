@@ -15,7 +15,7 @@ export default class ProfilesController {
             dob: schema.date.optional({
                 format: 'dd-MM-yyyy',
             }),
-            user_id: auth.user.toJSON().id,
+            user_id: auth.user.id,
         })
         const payload = await request.validate({
             schema: newUserSchema
@@ -27,10 +27,10 @@ export default class ProfilesController {
     public async getProfile({ auth, request, response }) {
         const user = await Profile
             .query()
-            .where('user_id', auth.user.toJSON().id)
+            .where('user_id', auth.user.id)
             .first()
-        const userData = user ? user.toJSON() : {};
-        userData['mobile'] = auth.user.toJSON().mobile;
+        const userData = user ? user : {};
+        userData['mobile'] = auth.user.mobile;
         response.send({ message: 'Profile Data', status: 'success', statusCode: 200, data: userData })
     }
     public async updateProfile({ auth, request, response }) {
@@ -46,20 +46,19 @@ export default class ProfilesController {
             dob: schema.date.optional({
                 format: 'dd-MM-yyyy',
             }),
-            user_id: auth.user.toJSON().id,
+            user_id: auth.user.id,
         })
         const payload = await request.validate({
             schema: newUserSchema
         })
         const user = await Profile
             .query()
-            .where('user_id', auth.user.toJSON().id)
+            .where('user_id', auth.user.id)
             .update(payload)
         response.send({ message: 'Profile data updated successfully', status: 'success', statusCode: 200, data: user });
     }
     public async deleteProfile({ auth, request, response }) {
-        const userId = auth.user.toJSON()
-        const user = await Profile.query().where('user_id', userId?.id).delete()
+        const user = await Profile.query().where('user_id', auth.user?.id).delete()
         response.send({ message: 'Profile data deleted successfully', status: 'success', statusCode: 200, data: user });
     }
 }
