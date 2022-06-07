@@ -18,14 +18,13 @@
 |
 */
 
-import Route from '@ioc:Adonis/Core/Route'
-
-Route.get('register', async (ctx) => {
-  const { default: UserController } = await import(
-    '../app/Controllers/Http/UsersController'
-  )
-  return new UserController().index(ctx)
-})
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+import Route from '@ioc:Adonis/Core/Route';
+Route.post('register', 'UsersController.store');
+Route.post('login', 'UsersController.login');
+Route.post('logout', 'UsersController.logout').middleware('auth');
+Route.group(() => {
+    Route.post('profile', 'ProfilesController.addProfile');
+    Route.get('profile', 'ProfilesController.getProfile');
+    Route.put('profile', 'ProfilesController.updateProfile');
+    Route.delete('profile', 'ProfilesController.deleteProfile');
+}).prefix('user').middleware('auth');

@@ -34,14 +34,14 @@ export default class AuthMiddleware {
 
     for (let guard of guards) {
       guardLastAttempted = guard
-
-      if (await auth.use(guard).check()) {
-        /**
-         * Instruct auth to use the given guard as the default guard for
-         * the rest of the request, since the user authenticated
-         * succeeded here
-         */
-        auth.defaultGuard = guard
+      try {
+        await auth.use('api').authenticate()
+      } catch (error) {
+        // revoke token if expired
+        await auth.use('api').revoke()
+      }
+      let isLoggedIn = auth.use('api').isLoggedIn
+      if (isLoggedIn) {
         return true
       }
     }
@@ -53,14 +53,14 @@ export default class AuthMiddleware {
       'Unauthorized access',
       'E_UNAUTHORIZED_ACCESS',
       guardLastAttempted,
-      this.redirectTo,
+      this.redirectTo
     )
   }
 
   /**
    * Handle request
    */
-  public async handle (
+  public async handle(
     { auth }: HttpContextContract,
     next: () => Promise<void>,
     customGuards: (keyof GuardsList)[]
