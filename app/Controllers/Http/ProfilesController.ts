@@ -4,22 +4,23 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator';
 export default class ProfilesController {
     public async addProfile({ auth, request, response }) {
         const newUserSchema = schema.create({
-            name: schema.string([
+            name: schema.string({}, [
                 rules.minLength(3),
                 rules.maxLength(30),
             ]),
-            email: schema.string([
+            email: schema.string({}, [
                 rules.email()
             ]),
-            gender: schema.string([]),
+            gender: schema.string(),
             dob: schema.date.optional({
                 format: 'dd-MM-yyyy',
             }),
-            user_id: auth.user.id,
+            // user_id: auth.user.id,
         })
         const payload = await request.validate({
             schema: newUserSchema
         })
+        payload['user_id'] = auth.user.id
         await Profile.create(payload);
         response.send({ message: 'Profile created', status: 'success', statusCode: 200 })
 
@@ -46,11 +47,11 @@ export default class ProfilesController {
             dob: schema.date.optional({
                 format: 'dd-MM-yyyy',
             }),
-            user_id: auth.user.id,
         })
         const payload = await request.validate({
             schema: newUserSchema
         })
+        payload['user_id'] = auth.user.id;
         const user = await Profile
             .query()
             .where('user_id', auth.user.id)
